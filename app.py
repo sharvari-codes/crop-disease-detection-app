@@ -7,6 +7,14 @@ from model_handler import ModelHandler
 from utils import preprocess_image, get_disease_info
 from auth_handler import AuthHandler
 from translations import get_text, get_all_translations
+from user_preferences import get_user_preferences, save_user_preferences, update_language_preference
+from pdf_export import generate_analysis_report, get_user_reports, delete_report
+from ux_enhancements import (
+    show_welcome_banner, show_quick_guide, show_error_message,
+    show_result_card, show_treatment_section, show_progress_indicator,
+    show_image_preview_with_guide, show_faq_section, show_footer_with_tips,
+    show_confidence_explanation, show_success_message, show_helpful_tooltip
+)
 
 # Initialize auth handler
 auth = AuthHandler()
@@ -336,7 +344,7 @@ def show_login_page():
             st.session_state.language = selected_lang
             st.rerun()
     
-    # Decorative header
+    # Decorative header with welcome banner
     st.markdown(f"""
         <div style="text-align: center; margin: 3rem 0 2rem 0;">
             <h1 style="color: #43A047; font-size: 2.8rem; font-weight: 700; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); margin: 0;">
@@ -418,6 +426,11 @@ def show_login_page():
                         st.error(message)
         
         st.markdown("---")
+        
+        # Add quick start guide for new users
+        show_quick_guide(lang)
+        show_faq_section(lang)
+        
         st.markdown(f"""
             <div style="text-align: center; margin-top: 2rem;">
                 <p style='color: #A5D6A7; font-size: 0.9rem; margin-bottom: 1rem;'>
@@ -527,11 +540,20 @@ def show_main_app():
     st.sidebar.info(t("app_info"))
 
     # Main content
-    tab1, tab2, tab3, tab4 = st.tabs([t("upload_image"), t("webcam"), t("information"), t("history")])
+    tab1, tab2, tab3, tab4, tab5 = st.tabs([t("upload_image"), t("webcam"), t("information"), t("history"), "⚙️ Settings"])
 
     # Tab 1: Upload Image
     with tab1:
+        # Show welcome banner on first tab
+        show_welcome_banner(lang)
+        
         st.subheader(t("upload_crop_image"))
+        
+        # Show helpful tooltip
+        show_helpful_tooltip(
+            t("upload_crop_image"),
+            "Take clear, well-lit photos of the affected crop area for best results"
+        )
         
         uploaded_file = st.file_uploader(
             t("choose_image"),
@@ -540,17 +562,17 @@ def show_main_app():
         )
         
         if uploaded_file is not None:
-            # Display uploaded image
-            col1, col2 = st.columns(2)
+            # Show progress indicator
+            show_progress_indicator(1, 4, lang)
             
-            with col1:
-                st.markdown("**Original Image**")
-                image = Image.open(uploaded_file)
-                st.image(image, use_column_width=True)
+            # Display uploaded image with preview guide
+            image = show_image_preview_with_guide(uploaded_file)
             
             # Analyze image
-            if st.button("Analyze Image", key="analyze_btn"):
-                with st.spinner("Analyzing image..."):
+            if st.button("🔍 " + t("analyze"), key="analyze_btn", use_container_width=True):
+                show_progress_indicator(2, 4, lang)
+                
+                with st.spinner(t("processing")):
                     try:
                         # Preprocess image (PIL Image passed directly)
                         processed_img = preprocess_image(image)
@@ -578,19 +600,71 @@ def show_main_app():
                             else:
                                 st.warning(f"Confidence below threshold ({confidence_threshold:.0%}). Consider uploading a clearer image.")
                         
-                        # Disease information
+                        # Show progress complete
+                        show_progress_indicator(3, 4, lang)
+                        
+                        # Disease information with enhanced UX
                         disease_info = get_disease_info(disease_label)
                         if disease_info:
                             st.markdown("---")
-                            st.markdown("### Disease Information")
-                            col1, col2 = st.columns(2)
-                            with col1:
-                                st.info(f"**Description:** {disease_info['description']}")
-                            with col2:
-                                st.info(f"**Recommendation:** {disease_info['treatment']}")
+                            
+                            # Display beautiful result card
+                            show_result_card(
+                                disease_label,
+                                confidence,
+                                disease_info.get('severity', 'Unknown'),
+                                lang
+                            )
+                            
+                            # Show confidence explanation
+                            st.markdown("### 📊 What This Means:")
+                            show_confidence_explanation(confidence, lang)
+                            
+                            # Display treatment recommendations
+                            st.markdown("### 💊 Treatment Plan:")
+                            show_treatment_section(
+                                disease_info.get('treatment', 'No treatment info available'),
+                                lang
+                            )
+                            
+                            # PDF Export Button
+                            st.markdown("---")
+                            st.markdown("### 📄 Export Results as PDF")
+                            
+                            try:
+                                # Generate PDF report directly
+                                report_path = generate_analysis_report(
+                                    st.session_state.username,
+                                    disease_label,
+                                    confidence,
+                                    disease_info.get('severity', 'Unknown'),
+                                    disease_info.get('treatment', 'No treatment info'),
+                                    disease_info.get('description', 'No description'),
+                                    lang=lang
+                                )
+                                
+                                if report_path:
+                                    with open(report_path, 'rb') as pdf_file:
+                                        pdf_data = pdf_file.read()
+                                        st.download_button(
+                                            label="📥 Download PDF Report",
+                                            data=pdf_data,
+                                            file_name=os.path.basename(report_path),
+                                            mime="application/pdf",
+                                            use_container_width=True
+                                        )
+                                    st.success("✅ PDF Report Ready! Click above to download.")
+                                else:
+                                    st.warning("Could not generate PDF. Please try again.")
+                            except Exception as e:
+                                st.error(f"Error generating PDF: {str(e)}")
+                            
+                            # Show success message
+                            show_progress_indicator(4, 4, lang)
                             
                     except Exception as e:
-                        st.error(f"Error during analysis: {str(e)}")
+                        show_error_message("upload_error", lang)
+                        st.error(f"Error details: {str(e)}")
 
     # Tab 2: Webcam Capture
     with tab2:
@@ -607,8 +681,8 @@ def show_main_app():
                 st.markdown("**Captured Image**")
                 st.image(camera_input)
                 
-                if st.button("Analyze Webcam Image", key="analyze_webcam"):
-                    with st.spinner("Analyzing captured image..."):
+                if st.button("🔍 Analyze Webcam Image", key="analyze_webcam", use_container_width=True):
+                    with st.spinner(t("processing")):
                         try:
                             # Convert captured image to array
                             image = Image.open(camera_input)
@@ -621,69 +695,108 @@ def show_main_app():
                             # Save analysis to user history
                             auth.save_analysis(st.session_state.username, disease_label, confidence)
                             
-                            # Display results
-                            st.markdown("---")
-                            st.markdown("### Analysis Results")
-                            col_res1, col_res2 = st.columns(2)
-                            
-                            with col_res1:
-                                st.metric("Disease", disease_label)
-                            with col_res2:
-                                st.metric("Confidence", f"{confidence:.2%}")
-                            
-                            # Disease information
+                            # Display beautiful results
                             disease_info = get_disease_info(disease_label)
                             if disease_info:
                                 st.markdown("---")
-                                st.markdown("### Disease Information")
-                                st.info(f"**Description:** {disease_info['description']}")
-                                st.success(f"**Treatment:** {disease_info['treatment']}")
+                                
+                                # Show result card
+                                show_result_card(
+                                    disease_label,
+                                    confidence,
+                                    disease_info.get('severity', 'Unknown'),
+                                    lang
+                                )
+                                
+                                # Show confidence explanation
+                                st.markdown("### 📊 What This Means:")
+                                show_confidence_explanation(confidence, lang)
+                                
+                                # Display treatment
+                                st.markdown("### 💊 Treatment Plan:")
+                                show_treatment_section(
+                                    disease_info.get('treatment', 'No treatment info'),
+                                    lang
+                                )
+                                
+                                # PDF Export Button for Webcam
+                                st.markdown("---")
+                                st.markdown("### 📄 Export Results as PDF")
+                                
+                                try:
+                                    # Generate PDF report directly
+                                    report_path = generate_analysis_report(
+                                        st.session_state.username,
+                                        disease_label,
+                                        confidence,
+                                        disease_info.get('severity', 'Unknown'),
+                                        disease_info.get('treatment', 'No treatment info'),
+                                        disease_info.get('description', 'No description'),
+                                        lang=lang
+                                    )
+                                    
+                                    if report_path:
+                                        with open(report_path, 'rb') as pdf_file:
+                                            pdf_data = pdf_file.read()
+                                            st.download_button(
+                                                label="📥 Download PDF Report",
+                                                data=pdf_data,
+                                                file_name=os.path.basename(report_path),
+                                                mime="application/pdf",
+                                                use_container_width=True,
+                                                key="pdf_download_webcam"
+                                            )
+                                        st.success("✅ PDF Report Ready! Click above to download.")
+                                    else:
+                                        st.warning("Could not generate PDF. Please try again.")
+                                except Exception as e:
+                                    st.error(f"Error generating PDF: {str(e)}")
+                                
+                                show_success_message("Analysis Complete!", "Results are ready above")
                                 
                         except Exception as e:
                             st.error(f"Error analyzing webcam image: {str(e)}")
 
     # Tab 3: Information & Guide
     with tab3:
-        st.subheader("How to Use This App")
+        # Show welcome banner for information tab
+        st.markdown("# 📚 Disease Guide & Support Center")
+        show_quick_guide(lang)
         
-        st.markdown("""
-        ### 🌾 Crop Disease Detection Guide
+        st.markdown("---")
+        st.markdown("### 🎯 Supported Diseases")
         
-        **Step 1: Prepare Your Image**
-        - Take a clear photo of the affected crop
-        - Ensure good lighting
-        - Include the diseased area in the frame
-        
-        **Step 2: Upload or Capture**
-        - Choose between uploading an existing image or capturing from webcam
-        - Use the "Upload Image" tab for saved photos
-        - Use the "Webcam Capture" tab for real-time photography
-        
-        **Step 3: Analyze**
-        - Click the "Analyze Image" button
-        - Wait for the AI model to process the image
-        
-        **Step 4: Review Results**
-        - Check the detected disease type
-        - Review the confidence score
-        - Read treatment recommendations
-        
-        ### 🎯 Supported Diseases
-        """)
-        
-        # Display disease database
+        # Display disease database with enhanced styling
         disease_db = {
-            "Healthy": {"description": "No disease detected", "treatment": "Continue regular maintenance"},
-            "Early Blight": {"description": "Fungal disease affecting tomato leaves", "treatment": "Use fungicides, remove affected leaves"},
-            "Late Blight": {"description": "Severe fungal infection in potatoes/tomatoes", "treatment": "Apply copper-based fungicides"},
-            "Powdery Mildew": {"description": "White powdery coating on leaves", "treatment": "Use sulfur-based treatments"},
-            "Leaf Spot": {"description": "Dark spots on crop leaves", "treatment": "Remove infected leaves, improve air circulation"},
+            "Healthy": {"description": "No disease detected", "treatment": "Continue regular maintenance", "severity": "Low"},
+            "Early Blight": {"description": "Fungal disease affecting tomato leaves", "treatment": "Use fungicides, remove affected leaves", "severity": "Medium"},
+            "Late Blight": {"description": "Severe fungal infection in potatoes/tomatoes", "treatment": "Apply copper-based fungicides", "severity": "High"},
+            "Powdery Mildew": {"description": "White powdery coating on leaves", "treatment": "Use sulfur-based treatments", "severity": "Medium"},
+            "Leaf Spot": {"description": "Dark spots on crop leaves", "treatment": "Remove infected leaves, improve air circulation", "severity": "Medium"},
         }
         
+        # Display diseases in an organized way
+        cols = st.columns(2)
+        col_idx = 0
         for disease, info in disease_db.items():
-            with st.expander(f"{disease}"):
-                st.write(f"**Description:** {info['description']}")
-                st.write(f"**Treatment:** {info['treatment']}")
+            with cols[col_idx % 2]:
+                # Create a styled container for each disease
+                st.markdown(f"""
+                <div style="border-left: 4px solid #5DB075; padding: 15px; margin: 10px 0; background: #f8f9fa; border-radius: 5px;">
+                    <h4 style="color: #2c5f3f; margin-top: 0;">{disease}</h4>
+                    <p><strong>Description:</strong> {info['description']}</p>
+                    <p><strong>Treatment:</strong> {info['treatment']}</p>
+                    <span style="background: #e8f5e9; color: #2e7d32; padding: 5px 10px; border-radius: 3px; font-size: 0.9em;">
+                        Severity: {info['severity']}
+                    </span>
+                </div>
+                """, unsafe_allow_html=True)
+            col_idx += 1
+        
+        st.markdown("---")
+        
+        # Show FAQ section
+        show_faq_section(lang)
         
         st.markdown("---")
         st.markdown("""
@@ -716,6 +829,7 @@ def show_main_app():
         
         st.markdown("---")
         
+        # Show analysis history
         history = auth.get_user_history(st.session_state.username, limit=20)
         
         if history:
@@ -736,23 +850,146 @@ def show_main_app():
                     st.caption(f"#{i}")
         else:
             st.info("No analysis history yet. Start analyzing crop images!")
+        
+        # Show PDF Reports
+        st.markdown("---")
+        st.subheader("📄 Saved PDF Reports")
+        
+        user_reports = get_user_reports(st.session_state.username)
+        
+        if user_reports:
+            st.write(f"You have {len(user_reports)} saved reports")
+            
+            for report in user_reports[:10]:  # Show last 10 reports
+                col1, col2, col3, col4 = st.columns([2, 2, 1, 1])
+                
+                with col1:
+                    st.text(report['date'])
+                with col2:
+                    st.text(report['filename'].replace(f"{st.session_state.username}_report_", "").replace(".pdf", ""))
+                with col3:
+                    st.caption(report['size'])
+                with col4:
+                    if st.button("📥", key=f"download_{report['filename']}", help="Download"):
+                        with open(report['filepath'], 'rb') as pdf_file:
+                            st.download_button(
+                                label="Download",
+                                data=pdf_file.read(),
+                                file_name=report['filename'],
+                                mime="application/pdf",
+                                key=f"btn_{report['filename']}"
+                            )
+        else:
+            st.info("No PDF reports yet. Generate reports by analyzing images!")
+    
+    # Tab 5: Settings & Preferences
+    with tab5:
+        st.subheader("⚙️ User Preferences & Settings")
+        
+        # Load user preferences
+        user_prefs = get_user_preferences(st.session_state.username)
+        
+        # Language Settings
+        st.markdown("### 🌐 Language Settings")
+        current_lang = st.session_state.language
+        selected_lang = st.selectbox(
+            t("select_language"),
+            options=["en", "mr", "hi", "kn"],
+            format_func=lambda x: {"en": "English", "mr": "मराठी (Marathi)", "hi": "हिंदी (Hindi)", "kn": "ಕನ್ನಡ (Kannada)"}[x],
+            index=["en", "mr", "hi", "kn"].index(current_lang),
+            key="settings_lang"
+        )
+        
+        if selected_lang != current_lang:
+            update_language_preference(st.session_state.username, selected_lang)
+            st.session_state.language = selected_lang
+            st.success("Language preference saved!")
+            st.rerun()
+        
+        # Notification Settings
+        st.markdown("---")
+        st.markdown("### 🔔 Notification Settings")
+        
+        notifications_enabled = st.checkbox(
+            "Enable notifications",
+            value=user_prefs.get('notifications', True),
+            key="settings_notifications"
+        )
+        
+        email_reports = st.checkbox(
+            "Send email reports after analysis (Coming Soon)",
+            value=user_prefs.get('email_reports', False),
+            key="settings_email",
+            disabled=True
+        )
+        
+        auto_save = st.checkbox(
+            "Auto-save analysis results",
+            value=user_prefs.get('auto_save_results', True),
+            key="settings_autosave"
+        )
+        
+        # Update preferences
+        if st.button("💾 Save Preferences", use_container_width=True):
+            user_prefs['notifications'] = notifications_enabled
+            user_prefs['auto_save_results'] = auto_save
+            save_user_preferences(st.session_state.username, user_prefs)
+            st.success("✅ Preferences saved successfully!")
+        
+        # Favorite Crops
+        st.markdown("---")
+        st.markdown("### 🌾 Favorite Crops")
+        
+        crops = ["Tomato", "Potato", "Wheat", "Rice", "Corn", "Cabbage", "Cucumber"]
+        favorite_crops = user_prefs.get('favorite_crops', [])
+        
+        selected_crops = st.multiselect(
+            "Select your favorite crops for quick access",
+            options=crops,
+            default=favorite_crops,
+            key="settings_crops"
+        )
+        
+        if st.button("💾 Save Favorite Crops", use_container_width=True):
+            user_prefs['favorite_crops'] = selected_crops
+            save_user_preferences(st.session_state.username, user_prefs)
+            st.success("✅ Favorite crops updated!")
+        
+        # Account Information
+        st.markdown("---")
+        st.markdown("### 👤 Account Information")
+        
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("Username", st.session_state.username)
+        with col2:
+            st.metric("Account Created", user_prefs.get('created_at', 'N/A')[:10])
+        with col3:
+            st.metric("Last Updated", user_prefs.get('updated_at', 'N/A')[:10])
+        
+        # Export & Import Settings
+        st.markdown("---")
+        st.markdown("### 📤 Export/Import Settings")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            if st.button("📤 Export Settings", use_container_width=True):
+                import json
+                prefs_json = json.dumps(user_prefs, indent=2)
+                st.download_button(
+                    label="📥 Download Settings",
+                    data=prefs_json,
+                    file_name=f"{st.session_state.username}_settings.json",
+                    mime="application/json"
+                )
+        
+        with col2:
+            st.info("📋 Tip: Export your settings to backup or share them across devices")
 
-    # Footer with creative design
+    # Professional footer with tips and support
     st.markdown("---")
-    st.markdown(f"""
-        <div style="text-align: center; padding: 2rem 1rem; background: linear-gradient(180deg, rgba(67, 160, 71, 0.05) 0%, rgba(67, 160, 71, 0.02) 100%); border-radius: 10px; margin-top: 2rem;">
-            <h4 style="color: #43A047; margin: 0.5rem 0;">Crop Disease Detection System v1.0</h4>
-            <p style="color: #A5D6A7; margin: 0.3rem 0; font-size: 0.95rem;">AI-Powered Agricultural Health Monitoring</p>
-            <hr style="margin: 1rem 0; opacity: 0.3;">
-            <p style="color: #A5D6A7; margin: 0; font-size: 0.85rem;">
-                <strong>User:</strong> {st.session_state.username} | 
-                <strong>Purpose:</strong> Crop Health Monitoring
-            </p>
-            <p style="color: #81C784; margin-top: 0.8rem; font-size: 0.8rem; opacity: 0.8;">
-                Developed for precision agriculture and sustainable farming practices
-            </p>
-        </div>
-    """, unsafe_allow_html=True)
+    show_footer_with_tips(lang)
 
 
 # Main app logic
