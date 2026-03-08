@@ -327,8 +327,8 @@ def show_login_page():
     with col3:
         selected_lang = st.selectbox(
             t("language"),
-            options=["en", "mr", "hi"],
-            format_func=lambda x: {"en": "English", "mr": "मराठी", "hi": "हिंदी"}[x],
+            options=["en", "mr", "hi", "kn"],
+            format_func=lambda x: {"en": "English", "mr": "मराठी", "hi": "हिंदी", "kn": "ಕನ್ನಡ"}[x],
             key="lang_selector",
             label_visibility="collapsed"
         )
@@ -438,8 +438,8 @@ def show_main_app():
     st.sidebar.markdown(f"**{t('language')}**")
     selected_lang = st.sidebar.selectbox(
         t("select_language"),
-        options=["en", "mr", "hi"],
-        format_func=lambda x: {"en": "English", "mr": "मराठी", "hi": "हिंदी"}[x],
+        options=["en", "mr", "hi", "kn"],
+        format_func=lambda x: {"en": "English", "mr": "मराठी", "hi": "हिंदी", "kn": "ಕನ್ನಡ"}[x],
         key="app_lang_selector",
         label_visibility="collapsed"
     )
