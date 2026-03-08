@@ -3,8 +3,63 @@
         "email": "admin@crophealth.com",
         "password": "$2b$12$L55LbgDUwSO7acwgWDqjn.yJrZH1POW0XM7upCfTs8qjK4VPunIH6",
         "created_at": "2026-03-08 10:08:51",
-        "analysis_history": [],
-        "total_analyses": 0,
+        "analysis_history": [
+            {
+                "timestamp": "2026-03-08 16:20:07",
+                "disease": "Powdery Mildew",
+                "confidence": 0.7634674764876905,
+                "image_path": null
+            },
+            {
+                "timestamp": "2026-03-08 16:34:10",
+                "disease": "Healthy",
+                "confidence": 0.99,
+                "image_path": null
+            },
+            {
+                "timestamp": "2026-03-08 16:37:18",
+                "disease": "Leaf Spot",
+                "confidence": 0.8921449198003658,
+                "image_path": null
+            },
+            {
+                "timestamp": "2026-03-08 16:48:57",
+                "disease": "Early Blight",
+                "confidence": 0.8446365048403908,
+                "image_path": null
+            },
+            {
+                "timestamp": "2026-03-08 16:49:32",
+                "disease": "Leaf Spot",
+                "confidence": 0.7973694906794089,
+                "image_path": null
+            },
+            {
+                "timestamp": "2026-03-08 16:50:00",
+                "disease": "Early Blight",
+                "confidence": 0.9466184491166422,
+                "image_path": null
+            },
+            {
+                "timestamp": "2026-03-08 16:54:30",
+                "disease": "Late Blight",
+                "confidence": 0.8155459855220462,
+                "image_path": null
+            },
+            {
+                "timestamp": "2026-03-08 16:56:40",
+                "disease": "Late Blight",
+                "confidence": 0.7772310456105626,
+                "image_path": null
+            },
+            {
+                "timestamp": "2026-03-08 16:59:17",
+                "disease": "Early Blight",
+                "confidence": 0.9297646813148379,
+                "image_path": null
+            }
+        ],
+        "total_analyses": 9,
         "is_admin": true
     },
     "Sagar Raut": {
