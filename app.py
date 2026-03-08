@@ -6,6 +6,7 @@ import os
 from model_handler import ModelHandler
 from utils import preprocess_image, get_disease_info
 from auth_handler import AuthHandler
+from translations import get_text, get_all_translations
 
 # Initialize auth handler
 auth = AuthHandler()
@@ -311,19 +312,38 @@ if 'predictions' not in st.session_state:
     st.session_state.predictions = None
 if 'auth_mode' not in st.session_state:
     st.session_state.auth_mode = "login"  # "login" or "register"
+if 'language' not in st.session_state:
+    st.session_state.language = "en"  # "en", "mr", "hi"
 
 
 def show_login_page():
     """Display login and registration interface"""
     
+    lang = st.session_state.language
+    t = lambda key: get_text(key, lang)
+    
+    # Language selector at top
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col3:
+        selected_lang = st.selectbox(
+            t("language"),
+            options=["en", "mr", "hi"],
+            format_func=lambda x: {"en": "English", "mr": "मराठी", "hi": "हिंदी"}[x],
+            key="lang_selector",
+            label_visibility="collapsed"
+        )
+        if selected_lang != st.session_state.language:
+            st.session_state.language = selected_lang
+            st.rerun()
+    
     # Decorative header
-    st.markdown("""
+    st.markdown(f"""
         <div style="text-align: center; margin: 3rem 0 2rem 0;">
             <h1 style="color: #43A047; font-size: 2.8rem; font-weight: 700; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); margin: 0;">
-                Crop Disease Detection
+                {t("crop_disease_detection")}
             </h1>
             <p style="color: #A5D6A7; font-size: 1.2rem; margin-top: 0.5rem; font-weight: 300;">
-                AI-Powered Agricultural Health Monitoring System
+                {t("ai_health_monitoring")}
             </p>
         </div>
     """, unsafe_allow_html=True)
@@ -336,27 +356,27 @@ def show_login_page():
         # Auth mode toggle with enhanced styling
         auth_col1, auth_col2 = st.columns(2)
         with auth_col1:
-            if st.button("Login", use_container_width=True, key="login_btn"):
+            if st.button(t("login"), use_container_width=True, key="login_btn"):
                 st.session_state.auth_mode = "login"
         with auth_col2:
-            if st.button("Register", use_container_width=True, key="register_btn"):
+            if st.button(t("register"), use_container_width=True, key="register_btn"):
                 st.session_state.auth_mode = "register"
         
         st.markdown("---")
         
         if st.session_state.auth_mode == "login":
-            st.markdown("""
+            st.markdown(f"""
                 <div style="text-align: center; margin: 1.5rem 0;">
-                    <h3 style="color: #43A047; margin-top: 0.5rem;">Secure Login</h3>
+                    <h3 style="color: #43A047; margin-top: 0.5rem;">{t("secure_login")}</h3>
                 </div>
             """, unsafe_allow_html=True)
             
             with st.form("login_form"):
-                st.markdown("<h4 style='color: #1a1a1a; font-weight: 700;'>Welcome back!</h4>", unsafe_allow_html=True)
-                username = st.text_input("Username", placeholder="Enter your username")
-                password = st.text_input("Password", type="password", placeholder="Enter your password")
+                st.markdown(f"<h4 style='color: #1a1a1a; font-weight: 700;'>{t("welcome_back")}</h4>", unsafe_allow_html=True)
+                username = st.text_input(t("username"), placeholder=t("username"))
+                password = st.text_input(t("password"), type="password", placeholder=t("password"))
                 
-                submit_btn = st.form_submit_button("Login", use_container_width=True)
+                submit_btn = st.form_submit_button(t("login"), use_container_width=True)
                 
                 if submit_btn:
                     if username and password:
@@ -372,36 +392,36 @@ def show_login_page():
                         st.warning("Please enter both username and password")
         
         else:  # register mode
-            st.markdown("""
+            st.markdown(f"""
                 <div style="text-align: center; margin: 1.5rem 0;">
-                    <h3 style="color: #43A047; margin-top: 0.5rem;">Create Your Account</h3>
+                    <h3 style="color: #43A047; margin-top: 0.5rem;">{t("create_account")}</h3>
                 </div>
             """, unsafe_allow_html=True)
             
             with st.form("register_form"):
-                st.markdown("#### Join our farming community!")
-                new_username = st.text_input("Username", placeholder="Choose a username (3+ characters)")
-                new_email = st.text_input("Email", placeholder="Enter your email")
-                new_password = st.text_input("Password", type="password", placeholder="Create a password (6+ characters)")
-                confirm_password = st.text_input("Confirm Password", type="password", placeholder="Confirm your password")
+                st.markdown(f"<h4 style='color: #1a1a1a; font-weight: 700;'>{t("join_community")}</h4>", unsafe_allow_html=True)
+                new_username = st.text_input(t("username"), placeholder=t("username"))
+                new_email = st.text_input(t("email"), placeholder=t("email"))
+                new_password = st.text_input(t("password"), type="password", placeholder=t("password"))
+                confirm_password = st.text_input(t("confirm_password"), type="password", placeholder=t("confirm_password"))
                 
-                register_btn = st.form_submit_button("Create Account", use_container_width=True)
+                register_btn = st.form_submit_button(t("create_button"), use_container_width=True)
                 
                 if register_btn:
                     success, message = auth.register_user(new_username, new_email, new_password, confirm_password)
                     if success:
                         st.success(message)
-                        st.info("Now you can login with your new account")
+                        st.info(t("create_account"))
                         st.session_state.auth_mode = "login"
                         st.rerun()
                     else:
                         st.error(message)
         
         st.markdown("---")
-        st.markdown("""
+        st.markdown(f"""
             <div style="text-align: center; margin-top: 2rem;">
                 <p style='color: #A5D6A7; font-size: 0.9rem; margin-bottom: 1rem;'>
-                    Your data is secure with bcrypt password hashing
+                    {t("secure_data")}
                 </p>
             </div>
         """, unsafe_allow_html=True)
@@ -410,23 +430,41 @@ def show_login_page():
 def show_main_app():
     """Display main application"""
     
-    # User info and logout in sidebar with decorative styling
+    lang = st.session_state.language
+    t = lambda key: get_text(key, lang)
+    
+    # Language selector in sidebar
     st.sidebar.markdown("---")
+    st.sidebar.markdown(f"**{t('language')}**")
+    selected_lang = st.sidebar.selectbox(
+        t("select_language"),
+        options=["en", "mr", "hi"],
+        format_func=lambda x: {"en": "English", "mr": "मराठी", "hi": "हिंदी"}[x],
+        key="app_lang_selector",
+        label_visibility="collapsed"
+    )
+    if selected_lang != st.session_state.language:
+        st.session_state.language = selected_lang
+        st.rerun()
+    
+    st.sidebar.markdown("---")
+    
+    # User info and logout in sidebar with decorative styling
     st.sidebar.markdown(f"""
         <div style="text-align: center; padding: 1rem;">
             <p style="color: #43A047; font-size: 1.1rem; font-weight: 600; margin: 0;">
                 {st.session_state.username}
             </p>
-            <p style="color: #A5D6A7; font-size: 0.85rem; margin: 0.5rem 0 0 0;">Logged In</p>
+            <p style="color: #A5D6A7; font-size: 0.85rem; margin: 0.5rem 0 0 0;">{t("logged_in")}</p>
         </div>
     """, unsafe_allow_html=True)
     
     col1, col2 = st.sidebar.columns(2)
     with col1:
-        if st.button("Profile", use_container_width=True):
+        if st.button(t("profile"), use_container_width=True):
             st.session_state.current_page = "profile"
     with col2:
-        if st.button("Logout", use_container_width=True):
+        if st.button(t("logout"), use_container_width=True):
             st.session_state.logged_in = False
             st.session_state.username = None
             st.rerun()
@@ -434,49 +472,49 @@ def show_main_app():
     st.markdown("---")
     
     # Header with decorative elements
-    st.markdown("""
+    st.markdown(f"""
         <div style="text-align: center; margin-bottom: 2rem;">
-            <h1 class="header">Crop Disease Detection System</h1>
+            <h1 class="header">{t("detection_system")}</h1>
             <p style="text-align: center; color: #A5D6A7; font-size: 1.1rem;">
-                Identify crop diseases using AI-powered image analysis
+                {t("identify_diseases")}
             </p>
         </div>
     """, unsafe_allow_html=True)
 
     # Sidebar
-    st.sidebar.title("Configuration")
+    st.sidebar.title(t("configuration"))
     st.sidebar.markdown("---")
 
     # Load Model Section with styled header
-    st.sidebar.markdown("""
+    st.sidebar.markdown(f"""
         <div style="background: linear-gradient(135deg, rgba(67, 160, 71, 0.1) 0%, rgba(67, 160, 71, 0.05) 100%); 
                     border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
-            <h4 style="color: #43A047; margin-top: 0;">Model Configuration</h4>
+            <h4 style="color: #43A047; margin-top: 0;">{t("model_config")}</h4>
         </div>
     """, unsafe_allow_html=True)
     
     model_path = st.sidebar.text_input(
-        "Model File Path (.h5)",
+        t("model_path"),
         value="crop_disease_model.h5",
         help="Path to your pre-trained TensorFlow model"
     )
 
-    if st.sidebar.button("Load/Reload Model", use_container_width=True):
-        with st.spinner("Loading model..."):
+    if st.sidebar.button(t("load_model"), use_container_width=True):
+        with st.spinner(t("loading_model")):
             try:
                 model_handler = ModelHandler(model_path)
                 st.session_state.model_loaded = model_handler.model is not None
                 if st.session_state.model_loaded:
-                    st.sidebar.success("Model loaded successfully!")
+                    st.sidebar.success(t("model_success"))
                 else:
-                    st.sidebar.warning("Using demo mode (no model file found)")
+                    st.sidebar.warning(t("demo_mode"))
                     st.session_state.model_loaded = False
             except Exception as e:
                 st.sidebar.error(f"Error loading model: {str(e)}")
                 st.session_state.model_loaded = False
 
     confidence_threshold = st.sidebar.slider(
-        "Confidence Threshold",
+        t("confidence_threshold"),
         min_value=0.0,
         max_value=1.0,
         value=0.5,
@@ -485,25 +523,20 @@ def show_main_app():
     )
 
     st.sidebar.markdown("---")
-    st.sidebar.subheader("About")
-    st.sidebar.info("""
-        This app uses deep learning to detect crop diseases from images.
-        - Upload an image or use your webcam
-        - The AI will analyze and predict diseases
-        - Get recommendations for treatment
-    """)
+    st.sidebar.subheader(t("about"))
+    st.sidebar.info(t("app_info"))
 
     # Main content
-    tab1, tab2, tab3, tab4 = st.tabs(["Upload Image", "Webcam Capture", "Information", "Analysis History"])
+    tab1, tab2, tab3, tab4 = st.tabs([t("upload_image"), t("webcam"), t("information"), t("history")])
 
     # Tab 1: Upload Image
     with tab1:
-        st.subheader("Upload Crop Image")
+        st.subheader(t("upload_crop_image"))
         
         uploaded_file = st.file_uploader(
-            "Choose an image file",
+            t("choose_image"),
             type=["jpg", "jpeg", "png", "bmp"],
-            help="Upload a clear image of the affected crop"
+            help=t("upload_help")
         )
         
         if uploaded_file is not None:
