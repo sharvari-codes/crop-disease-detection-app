@@ -18,6 +18,14 @@ A prototype application for detecting crop diseases using deep learning and comp
   - Responsive design
   - Easy navigation with tabs
 
+- **🌐 Multi-Language Support** ⭐ NEW
+  - **English** (Default)
+  - **Marathi** (मराठी)
+  - **Hindi** (हिंदी)
+  - **Kannada** (ಕನ್ನಡ) ✨ NEW
+  - Switch languages anytime in the app
+  - Perfect for Indian farmers and agricultural experts
+
 - **Supported Diseases**
   - Healthy crops
   - Early Blight

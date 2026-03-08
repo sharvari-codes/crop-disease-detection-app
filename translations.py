@@ -1,6 +1,6 @@
 """
 Language Translation Module
-Supports: English, Marathi, Hindi
+Supports: English, Marathi, Hindi, Kannada
 """
 
 TRANSLATIONS = {
@@ -227,6 +227,81 @@ TRANSLATIONS = {
         # Language
         "language": "🌐 भाषा",
         "select_language": "भाषा चुनें",
+    },
+    
+    "kn": {
+        # Login & Auth
+        "secure_login": "ಸುರಕ್ಷಿತ ಲಾಗಿನ್",
+        "welcome_back": "ಸ್ವಾಗತ!",
+        "username": "ಬಳಕೆದಾರ ಹೆಸರು",
+        "password": "ಪಾಸ್‌ವರ್ಡ್",
+        "login": "ಲಾಗಿನ್",
+        "register": "ನೋಂದಣಿ",
+        "create_account": "ನಿಮ್ಮ ಖಾತೆ ರಚಿಸಿ",
+        "join_community": "ನಮ್ಮ ಕೃಷಿ ಸಮುದಾಯಕ್ಕೆ ಸೇರಿಕೊಳ್ಳಿ!",
+        "email": "ಇಮೇಲ್",
+        "confirm_password": "ಪಾಸ್‌ವರ್ಡ್ ದೃಢೀಕರಣ",
+        "create_button": "ಖಾತೆ ರಚಿಸಿ",
+        
+        # Main App
+        "crop_disease_detection": "ಬೆಳೆ ರೋಗ ಸನಿಹ",
+        "detection_system": "ಬೆಳೆ ರೋಗ ಸನಿಹ ವ್ಯವಸ್ಥೆ",
+        "ai_health_monitoring": "AI-ಚಾಲಿತ ಕೃಷಿ ಆರೋಗ್ಯ ಮೇಲ್ವಿಚಾರಣೆ ವ್ಯವಸ್ಥೆ",
+        "identify_diseases": "AI-ಚಾಲಿತ ಚಿತ್ರ ವಿಶ್ಲೇಷಣ ಬಳಸಿ ಬೆಳೆ ರೋಗಗಳನ್ನು ಗುರುತಿಸಿ",
+        
+        # Tabs
+        "upload_image": "📸 ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ",
+        "webcam": "📷 ವೆಬ್‌ಕ್ಯಾಮ್ ಸೆರೆಹೆಕ್ಕು",
+        "information": "ℹ️ ಮಾಹಿತಿ",
+        "history": "📊 ವಿಶ್ಲೇಷಣೆ ಇತಿಹಾಸ",
+        
+        # Upload Tab
+        "upload_crop_image": "ಬೆಳೆ ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ",
+        "choose_image": "ಚಿತ್ರ ಫೈಲನ್ನು ಆಯ್ಕೆ ಮಾಡಿ",
+        "upload_help": "ಪ್ರಭಾವಿತ ಬೆಳೆಯ ಸ್ಪಷ್ಟ ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ",
+        "analyze": "🔍 ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸಿ",
+        
+        # Configuration
+        "configuration": "ಸಂರಚನೆ",
+        "model_config": "ಮಾದರಿ ಸಂರಚನೆ",
+        "model_path": "ಮಾದರಿ ಫೈಲ್ ಮಾರ್ಗ (.h5)",
+        "load_model": "ಮಾದರಿ ಲೋಡ್/ಮರುಲೋಡ್ ಮಾಡಿ",
+        "confidence_threshold": "ವಿಶ್ವಾಸ ಮಿತಿ",
+        "about": "ಬಗ್ಗೆ",
+        
+        # Messages
+        "processing": "ಪ್ರಕ್ರಿಯೆ ನಿರ್ವಹಿಸಲಾಗುತ್ತಿದೆ...",
+        "loading_model": "ಮಾದರಿ ಲೋಡ್ ಆಗುತ್ತಿದೆ...",
+        "model_success": "ಮಾದರಿ ಯಶಸ್ವಿಯಾಗಿ ಲೋಡ್ ಆಗಿದೆ!",
+        "demo_mode": "ಡೆಮೋ ಮೋಡ್ ಬಳಸುತ್ತಿದೆ (ಮಾದರಿ ಫೈಲ್ ಸಿಗಲಿಲ್ಲ)",
+        "upload_error": "ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ",
+        "select_image": "ದಯವಿತ್ತು ಮೊದಲು ಚಿತ್ರವನ್ನು ಆಯ್ಕೆ ಮಾಡಿ",
+        
+        # Disease Info
+        "disease": "ರೋಗ",
+        "confidence": "ವಿಶ್ವಾಸ",
+        "severity": "ತೀವ್ರತೆ",
+        "treatment": "ಚಿಕಿತ್ಸೆ",
+        "description": "ವರ್ಣನೆ",
+        "healthy": "ಆರೋಗ್ಯಕರ",
+        "early_blight": "ಆರಂಭಿಕ ಅಂಗಮಾರ",
+        "late_blight": "ತಡವಾದ ಅಂಗಮಾರ",
+        "powdery_mildew": "ಪೌಡರಿ ಫಂಗಸ್",
+        "leaf_spot": "ಎಲೆಯ ಚುಕ್ಕೆ",
+        "rust": "ಈರುಳ್ಳಿ",
+        
+        # Profile
+        "profile": "ಪ್ರೊಫೈಲ್",
+        "logout": "ಲಾಗ್ ಔಟ್",
+        "logged_in": "ಲಾಗಿನ್ ಆಗಿದೆ",
+        
+        # Footer
+        "secure_data": "ನಿಮ್ಮ ಡೇಟಾ bcrypt ಪಾಸ್‌ವರ್ಡ್ ಹ್ಯಾಶಿಂಗ್‌ನೊಂದಿಗೆ ಸುರಕ್ಷಿತ",
+        "app_info": "ಈ ಅ್ಯಾಪ್ ಚಿತ್ರಗಳಿಂದ ಬೆಳೆ ರೋಗಗಳನ್ನು ಸನಿಹಿಸಲು ಡೀಪ್ ಲರ್ನಿಂಗ್ ಬಳಸುತ್ತದೆ. ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಅಥವಾ ನಿಮ್ಮ ವೆಬ್‌ಕ್ಯಾಮ್ ಬಳಸಿ. AI ವಿಶ್ಲೇಷಣ ಮಾಡಿ ಮತ್ತು ರೋಗಗಳನ್ನು ಊಹಿಸಿ. ಚಿಕಿತ್ಸೆಗೆ ಶಿಫಾರಸುಗಳನ್ನು ಪಡೆಯಿರಿ.",
+        
+        # Language
+        "language": "🌐 ಭಾಷೆ",
+        "select_language": "ಭಾಷೆ ಆಯ್ಕೆ ಮಾಡಿ",
     }
 }
 
