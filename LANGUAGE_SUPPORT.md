@@ -2,13 +2,14 @@
 
 ## Supported Languages
 
-The Crop Disease Detection App now supports **3 languages**:
+The Crop Disease Detection App now supports **4 languages**:
 
-| Language | Code | Status |
-|----------|------|--------|
-| **English** | `en` | ✅ Default |
-| **Marathi** | `mr` | ✅ Supported |
-| **Hindi** | `hi` | ✅ Supported |
+| Language | Code | Status | Region |
+|----------|------|--------|--------|
+| **English** | `en` | ✅ Default | Universal |
+| **Marathi** | `mr` | ✅ Supported | Maharashtra |
+| **Hindi** | `hi` | ✅ Supported | North India |
+| **Kannada** | `kn` | ✅ NEW | Karnataka |
 
 ---
 
@@ -21,13 +22,20 @@ The Crop Disease Detection App now supports **3 languages**:
    - **English** (English)
    - **मराठी** (Marathi)
    - **हिंदी** (Hindi)
+   - **ಕನ್ನಡ** (Kannada) ✨ NEW
 4. The entire login interface will update instantly
 
 ### In Main App
 1. Once logged in, go to the **left sidebar**
-2. Find **🌐 भाषा / भाषा** (Language) selector
-3. Select your language
-4. All app content will switch to selected language
+2. Find **🌐 ಭಾಷೆ** (Language) selector
+3. Select your language from the dropdown
+4. All app content will switch to selected language instantly
+
+### Kannada Language Specifics
+- **Script**: Kannada (ಕನ್ನಡ) - Native script
+- **Region**: Karnataka, South India
+- **Speakers**: Farmers in Karnataka region
+- **Features**: Full UI translation, disease names, treatment info
 
 ---
 
@@ -45,14 +53,17 @@ The Crop Disease Detection App now supports **3 languages**:
 
 ### Example Translations:
 
-| English | Marathi | Hindi |
-|---------|---------|-------|
-| Welcome back! | पुन्हा स्वागतम! | स्वागत है! |
-| Username | वापरकर्ता नाव | उपयोगकर्ता नाम |
-| Password | पासवर्ड | पासवर्ड |
-| Upload Image | प्रतिमा अपलोड करा | छवि अपलोड करें |
-| Analyze Image | प्रतिमा विश्लेषण करा | छवि का विश्लेषण करें |
-| Crop Disease Detection | पिक रोग शोध | फसल रोग पहचान |
+| English | Marathi | Hindi | Kannada |
+|---------|---------|-------|----------|
+| Welcome back! | पुन्हा स्वागतम! | स्वागत है! | ಸ್ವಾಗತ! |
+| Username | वापरकर्ता नाव | उपयोगकर्ता नाम | ಬಳಕೆದಾರ ಹೆಸರು |
+| Password | पासवर्ड | पासवर्ड | ಪಾಸ್‌ವರ್ಡ್ |
+| Upload Image | प्रतिमा अपलोड करा | छवि अपलोड करें | ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ |
+| Analyze Image | प्रतिमा विश्लेषण करा | छवि का विश्लेषण करें | ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸಿ |
+| Crop Disease Detection | पिक रोग शोध | फसल रोग पहचान | ಬೆಳೆ ರೋಗ ಸನಿಹ |
+| Disease | रोग | रोग | ರೋಗ |
+| Treatment | उपचार | उपचार | ಚಿಕಿತ್ಸೆ |
+| Healthy | स्वस्थ | स्वस्थ | ಆರೋಗ್ಯಕರ |
 
 ---
 
@@ -140,6 +151,59 @@ All available keys in the translation system:
 
 ---
 
+## Kannada Language - Detailed Information
+
+### About Kannada
+- **Name**: ಕನ್ನಡ (Kannada)
+- **Family**: Dravidian language family
+- **Native Speakers**: ~60 million in Karnataka
+- **Script**: Kannada script (ಕನ್ನಡ ಲಿಪಿ)
+- **Region**: Karnataka State, South India
+- **Agricultural Zone**: Tropical and subtropical crops
+
+### Kannada Translations in the App
+
+#### Login & Registration
+| English | Kannada |
+|---------|---------|
+| Secure Login | ಸುರಕ್ಷಿತ ಲಾಗಿನ್ |
+| Create Account | ನಿಮ್ಮ ಖಾತೆ ರಚಿಸಿ |
+| Join our community | ನಮ್ಮ ಕೃಷಿ ಸಮುದಾಯಕ್ಕೆ ಸೇರಿಕೊಳ್ಳಿ |
+| Username | ಬಳಕೆದಾರ ಹೆಸರು |
+| Password | ಪಾಸ್‌ವರ್ಡ್ |
+
+#### Disease Names (Kannada)
+| English | Kannada |
+|---------|---------|
+| Early Blight | ಆರಂಭಿಕ ಅಂಗಮಾರ |
+| Late Blight | ತಡವಾದ ಅಂಗಮಾರ |
+| Powdery Mildew | ಪೌಡರಿ ಫಂಗಸ್ |
+| Leaf Spot | ಎಲೆಯ ಚುಕ್ಕೆ |
+| Rust | ಈರುಳ್ಳಿ |
+| Healthy | ಆರೋಗ್ಯಕರ |
+
+#### App Features (Kannada)
+| English | Kannada |
+|---------|---------|
+| Upload Image | ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ |
+| Analyze Image | ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸಿ |
+| Configuration | ಸಂರಚನೆ |
+| Load Model | ಮಾದರಿ ಲೋಡ್ ಮಾಡಿ |
+| Profile | ಪ್ರೊಫೈಲ್ |
+| Logout | ಲಾಗ್ ಔಟ್ |
+| Treatment | ಚಿಕಿತ್ಸೆ |
+
+### Language Code Usage
+```python
+# Kannada language code
+"kn"  # Represents Kannada language
+
+# Full selector example
+{"en": "English", "mr": "मराठी", "hi": "हिंदी", "kn": "ಕನ್ನಡ"}
+```
+
+---
+
 ## Tips
 
 - ✅ Your language preference is saved for the session
@@ -165,12 +229,22 @@ All available keys in the translation system:
 ## Future Enhancements
 
 Potential additions:
-- [ ] More Indic languages (Tamil, Telugu, Kannada, Bengali)
-- [ ] Regional disease names
-- [ ] Translated disease treatment information
-- [ ] Multi-language disease descriptions
+- [ ] More Indic languages (Tamil, Telugu, Bengali)
+- [ ] Regional disease names in local languages
+- [ ] Localized treatment recommendations
+- [ ] Multi-language disease descriptions with regional variations
 - [ ] Language preference saved in user profile
+- [ ] Voice output for disease detection results
+- [ ] Regional farming tips and seasonal advisories
+- [ ] Integration with agricultural extension services per region
+
+### Current Coverage
+- **Total Languages**: 4 (English, Marathi, Hindi, Kannada)
+- **Translation Keys**: 60+ UI elements and features
+- **Disease Names**: All translated
+- **Regional Support**: 4 major Indian states/regions
 
 ---
 
 **Enjoy using the Crop Disease Detection App in your preferred language!** 🌾
+✨ **Supporting Indian Farmers Across Multiple States in Their Native Languages!** ✨
