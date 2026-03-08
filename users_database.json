@@ -57,9 +57,15 @@
                 "disease": "Early Blight",
                 "confidence": 0.9297646813148379,
                 "image_path": null
+            },
+            {
+                "timestamp": "2026-03-08 17:24:32",
+                "disease": "Healthy",
+                "confidence": 0.8929727682788507,
+                "image_path": null
             }
         ],
-        "total_analyses": 9,
+        "total_analyses": 10,
         "is_admin": true
     },
     "Sagar Raut": {
