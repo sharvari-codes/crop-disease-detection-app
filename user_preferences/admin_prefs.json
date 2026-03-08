@@ -4,8 +4,11 @@
     "notifications": true,
     "email_reports": false,
     "auto_save_results": true,
-    "favorite_crops": [],
+    "favorite_crops": [
+        "Wheat",
+        "Tomato"
+    ],
     "disease_interests": [],
     "created_at": "2026-03-08T16:57:03.676049",
-    "updated_at": "2026-03-08T16:58:54.030378"
+    "updated_at": "2026-03-08T17:25:40.143047"
 }
