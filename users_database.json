@@ -1,0 +1,18 @@
+{
+    "admin": {
+        "email": "admin@crophealth.com",
+        "password": "$2b$12$L55LbgDUwSO7acwgWDqjn.yJrZH1POW0XM7upCfTs8qjK4VPunIH6",
+        "created_at": "2026-03-08 10:08:51",
+        "analysis_history": [],
+        "total_analyses": 0,
+        "is_admin": true
+    },
+    "Sagar Raut": {
+        "email": "sagarraut@gamil.com ",
+        "password": "$2b$12$7qd/ieWlVtrauhi9dGGGm.mTh5pSmaQhZn.IO6c8EqW4bTgFvzXUe",
+        "created_at": "2026-03-08 10:15:03",
+        "analysis_history": [],
+        "total_analyses": 0,
+        "is_admin": false
+    }
+}
